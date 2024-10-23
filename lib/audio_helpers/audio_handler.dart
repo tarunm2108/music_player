@@ -9,8 +9,7 @@ Future<AudioHandler> initAudioService() async {
   return await AudioService.init(
       builder: () => MyAudioHandler(),
       config: AudioServiceConfig(
-        androidNotificationChannelId:
-            "com.music_player.channel.audio",
+        androidNotificationChannelId: "com.music_player.channel.audio",
         androidNotificationChannelName: "music_player",
         androidShowNotificationBadge: true,
         androidStopForegroundOnPause: true,
@@ -20,11 +19,14 @@ Future<AudioHandler> initAudioService() async {
 
 abstract class AudioPlayerHandler implements AudioHandler {
   Future<void> setNewPlaylist(List<MediaItem> mediaItems, int index);
+
   Future<void> moveQueueItem(int currentIndex, int newIndex);
+
   Future<void> removeQueueItemIndex(int index);
 }
 
-class MyAudioHandler extends BaseAudioHandler implements AudioPlayerHandler {
+class MyAudioHandler extends BaseAudioHandler
+    implements AudioPlayerHandler, SeekHandler {
   final player = AudioPlayer();
   final playlist =
       ConcatenatingAudioSource(children: [], useLazyPreparation: true);
@@ -194,12 +196,12 @@ class MyAudioHandler extends BaseAudioHandler implements AudioPlayerHandler {
 
   @override
   Future<void> skipToNext() async {
-     player.seekToNext();
+    player.seekToNext();
   }
 
   @override
   Future<void> skipToPrevious() async {
-     player.seekToPrevious();
+    player.seekToPrevious();
   }
 
   @override
@@ -230,7 +232,7 @@ class MyAudioHandler extends BaseAudioHandler implements AudioPlayerHandler {
 
   @override
   Future customAction(String name, [Map<String, dynamic>? extras]) async {
-    if(name == 'dispose') {
+    if (name == 'dispose') {
       await player.dispose();
       super.stop();
     }
@@ -239,7 +241,8 @@ class MyAudioHandler extends BaseAudioHandler implements AudioPlayerHandler {
   @override
   Future<void> stop() async {
     await player.stop();
-    playbackState.add( playbackState.value.copyWith(processingState: AudioProcessingState.idle) );
+    playbackState.add(playbackState.value
+        .copyWith(processingState: AudioProcessingState.idle));
     return super.stop();
   }
 

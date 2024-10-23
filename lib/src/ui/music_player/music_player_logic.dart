@@ -10,10 +10,18 @@ class MusicPlayerLogic extends AppBaseController {
 
   @override
   void onInit() {
-    pageManager.add(
-        const MediaItem(id: "101", title: "Audio", extras: {
-      "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-    }));
+    pageManager.init();
+    final _item = MediaItem(
+      id: 'https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3',
+      album: "Science Friday",
+      title: "A Salute To Head-Scratching Science",
+      artist: "Science Friday and WNYC Studios",
+      duration: const Duration(milliseconds: 5739820),
+      extras: {"url":"https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3"},
+      artUri: Uri.parse(
+          'https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'),
+    );
+    pageManager.add(_item);
     super.onInit();
   }
 
