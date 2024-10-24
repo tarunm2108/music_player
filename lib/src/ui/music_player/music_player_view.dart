@@ -77,6 +77,11 @@ class MusicPlayerPage extends GetView<MusicPlayerLogic> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      IconButton(
+                        onPressed:()=> controller.pageManager.seekBackward(const Duration(seconds: 10)),
+                        icon: const Icon(Icons.replay_10,size: 30),
+                      ),
+                      15.toSpace,
                       ValueListenableBuilder<bool>(
                         valueListenable:
                             controller.pageManager.isFirstSongNotifier,
@@ -128,7 +133,7 @@ class MusicPlayerPage extends GetView<MusicPlayerLogic> {
                           );
                         },
                       ),
-                      const SizedBox(width: 15),
+                      15.toSpace,
                       ValueListenableBuilder<bool>(
                         valueListenable:
                             controller.pageManager.isLastSongNotifier,
@@ -141,6 +146,11 @@ class MusicPlayerPage extends GetView<MusicPlayerLogic> {
                           );
                         },
                       ),
+                      15.toSpace,
+                      IconButton(
+                        onPressed:()=> controller.pageManager.seekForward(const Duration(seconds: 10)),
+                        icon: const Icon(Icons.forward_10,size: 30),
+                      )
                     ],
                   ),
                   ValueListenableBuilder(

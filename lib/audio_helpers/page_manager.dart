@@ -61,7 +61,7 @@ class PageManager {
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
 
-  final audioHandler = getIt<AudioHandler>();
+  final audioHandler = getIt<MyAudioHandler>();
 
   void init() async {
     listenToChangeInPlaylist();
@@ -153,10 +153,28 @@ class PageManager {
   }
 
   void play() => audioHandler.play();
+
   void pause() => audioHandler.pause();
+
   void seek(Duration position) => audioHandler.seek(position);
+
   void previous() => audioHandler.skipToPrevious();
+
   void next() => audioHandler.skipToNext();
+
+  void seekForward(Duration duration) async {
+    final newPosition = audioHandler.player.position + duration;
+    audioHandler.seek(newPosition);
+  }
+
+  void seekBackward(Duration duration) async {
+    final newPosition = audioHandler.player.position - duration;
+    if (newPosition >= Duration.zero) {
+      audioHandler.seek(newPosition);
+    } else {
+      audioHandler.seek(Duration.zero);
+    }
+  }
 
   Future<void> playAS() async {
     return await audioHandler.play();
@@ -227,30 +245,29 @@ class PageManager {
     if (enable) {
       audioHandler.setShuffleMode(AudioServiceShuffleMode.all);
     } else {
-       audioHandler.setShuffleMode(AudioServiceShuffleMode.none);
+      audioHandler.setShuffleMode(AudioServiceShuffleMode.none);
     }
   }
 
-   Future<void> setShuffleMode(AudioServiceShuffleMode value) async {
+  Future<void> setShuffleMode(AudioServiceShuffleMode value) async {
     isShuffleModeEnabledNotifier.value = value == AudioServiceShuffleMode.all;
     return audioHandler.setShuffleMode(value);
-   }
+  }
 
-   Future<void> add(MediaItem mediaItem) async {
-     audioHandler.addQueueItem(mediaItem);
-   }
+  Future<void> add(MediaItem mediaItem) async {
+    audioHandler.addQueueItem(mediaItem);
+  }
 
-   Future<void> adds(List<MediaItem> mediaItems, int index) async {
-    
-    if(mediaItems.isEmpty) {
+  Future<void> adds(List<MediaItem> mediaItems, int index) async {
+    if (mediaItems.isEmpty) {
       return;
     }
     await (audioHandler as MyAudioHandler).setNewPlaylist(mediaItems, index);
   }
 
-  void remove(){
+  void remove() {
     final lastIndex = audioHandler.queue.value.length - 1;
-    if(lastIndex < 0) return;
+    if (lastIndex < 0) return;
     audioHandler.removeQueueItemAt(lastIndex);
   }
 
@@ -260,16 +277,15 @@ class PageManager {
     audioHandler.removeQueueItemAt(lastIndex);
   }
 
-  void dispose(){
+  void dispose() {
     audioHandler.customAction('dispose');
   }
 
   Future<void> stop() async {
-     await audioHandler.stop();
-     await audioHandler.seek(Duration.zero);
-     currentSongNotifier.value = null;
-     await removeAll();
-     await Future.delayed(const Duration(milliseconds: 300));
+    await audioHandler.stop();
+    await audioHandler.seek(Duration.zero);
+    currentSongNotifier.value = null;
+    await removeAll();
+    await Future.delayed(const Duration(milliseconds: 300));
   }
-
 }
