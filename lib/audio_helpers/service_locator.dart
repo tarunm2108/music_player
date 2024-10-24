@@ -6,6 +6,7 @@ import 'package:music_player/audio_helpers/page_manager.dart';
 GetIt getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
-  getIt.registerSingleton<AudioHandler>(await initAudioService());
+  MyAudioHandler myAudioHandler =  await initAudioService();
+  getIt.registerSingleton<MyAudioHandler>(myAudioHandler);
   getIt.registerLazySingleton<PageManager>(() => PageManager());
 }

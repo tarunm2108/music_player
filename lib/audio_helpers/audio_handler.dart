@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player/utils/logger.dart';
 
-Future<AudioHandler> initAudioService() async {
+Future<MyAudioHandler> initAudioService() async {
   return await AudioService.init(
       builder: () => MyAudioHandler(),
       config: AudioServiceConfig(
